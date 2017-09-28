@@ -10,7 +10,8 @@ parser.add_argument('filename', type=str, help='filename or path to the file')
 
 def main(filename):
     if not os.path.exists(filename):
-        raise IOError
+        print("FileNotFoundException: {0} is not found.".format(filename))
+        sys.exit(1)
     print(os.path.abspath(filename))
 
 if __name__ == '__main__':
