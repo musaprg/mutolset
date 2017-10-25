@@ -21,10 +21,12 @@ def main(filename):
         reader = csv.reader(f)
         print("\\begin{table}[htb]")
         print("\t\\begin{tabular}{|", end='')
-        for i in range(0, len(reader)):
+        for i in range(0, len(next(reader))):
             print("c|", end='')
-        print("")
+        print("}")
+        f.seek(0) # go back to entry point of reader
         for row in reader:
+            print("\t\t", end='')
             for index, key in enumerate(row):
                 print("{0} ".format(key), end='')
                 if index == len(row)-1:
