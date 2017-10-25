@@ -20,20 +20,34 @@ def main(filename):
     with open(filename, 'r') as f:
         reader = csv.reader(f)
         print("\\begin{table}[htb]")
-        print("\t\\begin{tabular}{|", end='')
-        for i in range(0, len(next(reader))):
-            print("c|", end='')
-        print("}")
+        print("\t\\begin{center}")
+        print("\t\t\\caption{ここにタイトルを入れてね}")
+        print("\t\t\\begin{tabular}{", end='')
+        col_len = len(next(reader))
+        for i in range(0, col_len):
+            print("c", end='')
+            if i != col_len-1:
+                print("|", end='')
+        print("} \\hline \\hline")
         f.seek(0) # go back to entry point of reader
+        header = next(reader)
+        print("\t\t\t", end='')
+        for index, key in enumerate(header):
+            print("{0} ".format(key), end='')
+            if index == len(header)-1:
+                print("\\\\ \\hline")
+            else:
+                print("& ", end='')
         for row in reader:
-            print("\t\t", end='')
+            print("\t\t\t", end='')
             for index, key in enumerate(row):
                 print("{0} ".format(key), end='')
                 if index == len(row)-1:
-                    print("\\\\")
+                    print("\\\\ \\hline")
                 else:
                     print("& ", end='')
-        print("\t\\end{tabular}")
+        print("\t\t\\end{tabular}")
+        print("\t\\end{center}")
         print("\\end{table}")
 
 if __name__ == '__main__':
