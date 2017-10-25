@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import os,sys
+import argparse
+import csv
+
+parser = argparse.ArgumentParser(description='Convert CSV file to TeX tabular format.')
+parser.add_argument('filename', type=str, help='filename or path to the csv file')
+
+def main(filename):
+    if not os.path.exists(filename):
+        print("FileNotFoundException: {0} is not found.".format(filename))
+        sys.exit(1)
+    _, ext = os.path.splitext(os.path.basename(filename))
+    if ext != ".csv":
+        print("Target file must be csv file.")
+        sys.exit(1)
+    with open(filename, 'r') as f:
+        reader = csv.reader(f)
+        print("\\begin{table}[htb]")
+        print("\t\\begin{tabular}{lcrr}")
+        for row in reader:
+            for index, key in enumerate(row):
+                print("{0} ".format(key), end='')
+                if index == len(row)-1:
+                    print("\\\\")
+                else:
+                    print("& ", end='')
+        print("\t\\end{tabular}")
+        print("\\end{table}")
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    main(args.filename)
