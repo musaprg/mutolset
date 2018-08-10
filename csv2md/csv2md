@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import argparse
+import csv
+
+parser = argparse.ArgumentParser(description='Convert CSV file to Markdown format')
+parser.add_argument('filename', type=str, help='filename or path to the csv file')
+
+def convert(filename, encoding='utf-8'):
+    with open(filename, 'r', encoding=encoding) as f:
+        reader = csv.reader(f)
+        col_len = len(next(reader))
+        f.seek(0) # go back to entry point of reader
+
+        # Print header
+        header = next(reader)
+        print("|", end='')
+        for index, key in enumerate(header):
+            print("{0}|".format(key), end='')
+        print("")
+
+        print("|", end='')
+        for _ in range(col_len):
+            print("---|", end='')
+        print("")
+
+        for row in reader:
+            print("|", end='')
+            for index, key in enumerate(row):
+                print("{0}|".format(key), end='')
+                if index == len(row)-1:
+                    print("")
+
+
+def main(filename):
+    if not os.path.exists(filename):
+        print("FileNotFoundException: {0} is not found.".format(filename))
+        sys.exit(1)
+    _, ext = os.path.splitext(os.path.basename(filename))
+    if ext != ".csv":
+        print("Target file must be csv file.")
+        sys.exit(1)
+    try:
+        convert(filename)
+    except UnicodeDecodeError:
+        convert(filename, encoding='shift_jis')
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    main(args.filename)
